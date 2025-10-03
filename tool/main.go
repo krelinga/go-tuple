@@ -43,7 +43,12 @@ func (t T{{.N}}[{{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}}{{end}}]
 func (t T{{.N}}[{{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}}{{end}}]) Last() {{(index .Fields (sub (len .Fields) 1)).Type}} {
 	return t.{{(index .Fields (sub (len .Fields) 1)).Name}}
 }
-{{if gt .N 1}}
+{{if eq .N 2}}
+// CutLast returns the first field (omitting the last field)
+func (t T{{.N}}[{{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}}{{end}}]) CutLast() {{(index .Fields 0).Type}} {
+	return t.{{(index .Fields 0).Name}}
+}
+{{else if gt .N 2}}
 // CutLast returns a tuple with one fewer field (omitting the last field)
 func (t T{{.N}}[{{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}}{{end}}]) CutLast() T{{sub .N 1}}[{{range $i, $f := .Fields}}{{if lt $i (sub (len $.Fields) 1)}}{{if $i}}, {{end}}{{$f.Type}}{{end}}{{end}}] {
 	return T{{sub .N 1}}[{{range $i, $f := .Fields}}{{if lt $i (sub (len $.Fields) 1)}}{{if $i}}, {{end}}{{$f.Type}}{{end}}{{end}}]{
@@ -80,8 +85,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	if n <= 0 {
-		fmt.Fprintf(os.Stderr, "Error: N must be a positive integer\n")
+	if n < 2 {
+		fmt.Fprintf(os.Stderr, "Error: N must be >= 2\n")
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -112,6 +117,9 @@ func main() {
 		},
 		"lt": func(a, b int) bool {
 			return a < b
+		},
+		"eq": func(a, b int) bool {
+			return a == b
 		},
 	}
 

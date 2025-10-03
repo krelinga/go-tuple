@@ -1,6 +1,5 @@
 package tuple
 
-//go:generate go run ./tool/main.go -package=tuple -out=t1.go -N=1
 //go:generate go run ./tool/main.go -package=tuple -out=t2.go -N=2
 //go:generate go run ./tool/main.go -package=tuple -out=t3.go -N=3
 //go:generate go run ./tool/main.go -package=tuple -out=t4.go -N=4
