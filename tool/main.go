@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"text/template"
 )
 
@@ -25,6 +26,13 @@ const tupleTemplate = `package {{.Package}}
 type T{{.N}}[{{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}} any{{end}}] struct {
 {{range .Fields}}	{{.Name}} {{.Type}}
 {{end}}}
+
+// NewT{{.N}} creates a new T{{.N}} tuple
+func NewT{{.N}}[{{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}} any{{end}}]({{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Name | lower}} {{$f.Type}}{{end}}) T{{.N}}[{{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}}{{end}}] {
+	return T{{.N}}[{{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}}{{end}}]{
+{{range .Fields}}		{{.Name}}: {{.Name | lower}},
+{{end}}	}
+}
 
 // First returns the first field of the tuple
 func (t T{{.N}}[{{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}}{{end}}]) First() {{(index .Fields 0).Type}} {
@@ -86,6 +94,9 @@ func main() {
 	funcMap := template.FuncMap{
 		"sub": func(a, b int) int {
 			return a - b
+		},
+		"lower": func(s string) string {
+			return strings.ToLower(s)
 		},
 	}
 
