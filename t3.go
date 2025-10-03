@@ -24,3 +24,16 @@ func (t T3[F0, F1, F2]) First() F0 {
 func (t T3[F0, F1, F2]) Last() F2 {
 	return t.F2
 }
+
+// CutLast returns a tuple with one fewer field (omitting the last field)
+func (t T3[F0, F1, F2]) CutLast() T2[F0, F1] {
+	return T2[F0, F1]{
+		F0: t.F0,
+		F1: t.F1,
+	}
+}
+
+// Get returns all tuple field values
+func (t T3[F0, F1, F2]) Get() (F0, F1, F2) {
+	return t.F0, t.F1, t.F2
+}

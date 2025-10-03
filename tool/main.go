@@ -43,6 +43,18 @@ func (t T{{.N}}[{{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}}{{end}}]
 func (t T{{.N}}[{{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}}{{end}}]) Last() {{(index .Fields (sub (len .Fields) 1)).Type}} {
 	return t.{{(index .Fields (sub (len .Fields) 1)).Name}}
 }
+{{if gt .N 1}}
+// CutLast returns a tuple with one fewer field (omitting the last field)
+func (t T{{.N}}[{{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}}{{end}}]) CutLast() T{{sub .N 1}}[{{range $i, $f := .Fields}}{{if lt $i (sub (len $.Fields) 1)}}{{if $i}}, {{end}}{{$f.Type}}{{end}}{{end}}] {
+	return T{{sub .N 1}}[{{range $i, $f := .Fields}}{{if lt $i (sub (len $.Fields) 1)}}{{if $i}}, {{end}}{{$f.Type}}{{end}}{{end}}]{
+{{range $i, $f := .Fields}}{{if lt $i (sub (len $.Fields) 1)}}		{{$f.Name}}: t.{{$f.Name}},
+{{end}}{{end}}	}
+}
+{{end}}
+// Get returns all tuple field values
+func (t T{{.N}}[{{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}}{{end}}]) Get() ({{range $i, $f := .Fields}}{{if $i}}, {{end}}{{$f.Type}}{{end}}) {
+	return {{range $i, $f := .Fields}}{{if $i}}, {{end}}t.{{$f.Name}}{{end}}
+}
 `
 
 func main() {
@@ -97,6 +109,9 @@ func main() {
 		},
 		"lower": func(s string) string {
 			return strings.ToLower(s)
+		},
+		"lt": func(a, b int) bool {
+			return a < b
 		},
 	}
 

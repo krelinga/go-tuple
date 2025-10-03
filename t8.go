@@ -34,3 +34,21 @@ func (t T8[F0, F1, F2, F3, F4, F5, F6, F7]) First() F0 {
 func (t T8[F0, F1, F2, F3, F4, F5, F6, F7]) Last() F7 {
 	return t.F7
 }
+
+// CutLast returns a tuple with one fewer field (omitting the last field)
+func (t T8[F0, F1, F2, F3, F4, F5, F6, F7]) CutLast() T7[F0, F1, F2, F3, F4, F5, F6] {
+	return T7[F0, F1, F2, F3, F4, F5, F6]{
+		F0: t.F0,
+		F1: t.F1,
+		F2: t.F2,
+		F3: t.F3,
+		F4: t.F4,
+		F5: t.F5,
+		F6: t.F6,
+	}
+}
+
+// Get returns all tuple field values
+func (t T8[F0, F1, F2, F3, F4, F5, F6, F7]) Get() (F0, F1, F2, F3, F4, F5, F6, F7) {
+	return t.F0, t.F1, t.F2, t.F3, t.F4, t.F5, t.F6, t.F7
+}
